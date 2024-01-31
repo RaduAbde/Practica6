@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 data class RespuestaRickMorty(
     val info: Info,
     @SerializedName("results")
-    val results: List<Personaje>
+    val listaPersonajes: List<Personaje>
 )

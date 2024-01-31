@@ -1,13 +1,28 @@
 package net.iessochoa.radwaneabdessamie.practica6.ui.home
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import net.iessochoa.radwaneabdessamie.practica6.model.Personaje
+import net.iessochoa.radwaneabdessamie.practica6.repository.Repository
 
-class HomeViewModel : ViewModel() {
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+class HomeViewModel (application: Application): AndroidViewModel(application) {
+    val personajesLiveData:LiveData<MutableList<Personaje>>
+    init {
+        //iniciamos el repositorio
+        Repository(application)
+        //observaremos los cambios en la lista de personajes
+        personajesLiveData=Repository.getLiveDataListaPersonajes()
+        //carga la primera página de personajes
+        getNextPersonajes()
     }
-    val text: LiveData<String> = _text
+    //lanza en segundo plano la carga de nuevos personajes
+    fun getNextPersonajes()=viewModelScope.launch(Dispatchers.IO) {
+        Repository.getNextPersonajes()
+    }
 }

@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/navigation_favoritos"
-        android:icon="@android:drawable/btn_star_big_on"
+        android:icon="@android:drawable/stat_sys_download"
         android:title="@string/favoritos" />
 
 

@@ -48,6 +48,7 @@ object NetworkService {
      * personajes. Es necesario tener conexión a Internet y ejecutarse en segundo plano
      */
     suspend fun getNextPersonajes() {
+        if (pagina != 42) {
         //comprobamos si tenemos Internet(la función está más abajo)
         if (isConnected(application)) {
             try {
@@ -57,14 +58,17 @@ object NetworkService {
                 val respuesta = servicioRickMorty.listaPersonajes(pagina)
                 if (respuesta.isSuccessful) {//si es correcto
                     //leemos el objeto de tipo RespuestaRickMorty
-                    val respuestaRickMorty=respuesta.body()
+                    val respuestaRickMorty = respuesta.body()
 //recordad que tiene dos campos:info y listaPersonajes
                     val listado = respuestaRickMorty?.listaPersonajes
                     if (listado != null) {
                         //añadimos a la lista los nuevos personajes
                         listaPersonajes.addAll(listado)
-                        Log.i(TAG,"Personajes actuales: ${listaPersonajes.size}")
-                        Log.i(TAG,"Siguiente Página:${respuestaRickMorty.info.next?.substringAfterLast("=")?:"ninguno"}")
+                        Log.i(TAG, "Personajes actuales: ${listaPersonajes.size}")
+                        Log.i(
+                            TAG,
+                            "Siguiente Página:${respuestaRickMorty.info.next?.substringAfterLast("=") ?: "ninguno"}"
+                        )
 
 //actualizamos el LiveData
                         personajesLiveData.postValue(listaPersonajes)
@@ -80,9 +84,10 @@ object NetworkService {
             } catch (e: IOException) {
                 Log.e(TAG, "error en el acceso al servicio: $(respuesta.errorBody().toString())")
             }
-        }else{
-            Log.e(TAG,"error de acceso a Internet")
+        } else {
+            Log.e(TAG, "error de acceso a Internet")
         }
+    }
     }
     /**
      * Nos devuelve el LiveData con la lista

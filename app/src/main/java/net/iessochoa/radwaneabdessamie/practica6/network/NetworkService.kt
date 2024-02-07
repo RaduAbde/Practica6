@@ -20,6 +20,12 @@ object NetworkService {
         //necesitaremos el context para saber si tenemos conexión
         this.application = context.applicationContext as Application
     }
+
+    //LiveData para controlar el icono de progreso en la vista
+    enum class EstadoServicio { LEYENDO, PARADO, ERROR }
+    private val estadoServicioLiveData =
+        MutableLiveData<EstadoServicio>(EstadoServicio.PARADO)
+
     //Base de la url de la Api
     //IMPORTANTE: la baseURL siempre tiene que terminar con una barra horizontal
     private val URI_BASE = "https://rickandmortyapi.com/api/"
@@ -52,6 +58,7 @@ object NetworkService {
         //comprobamos si tenemos Internet(la función está más abajo)
         if (isConnected(application)) {
             try {
+                estadoServicioLiveData.postValue(EstadoServicio.LEYENDO)
                 //Llamamos al servicio y esperamos la llegada de datos
                 //Pedimos la página, pero podíamos haber utilizado la uri del campo
                 //'next' de la clase 'info'
@@ -72,6 +79,7 @@ object NetworkService {
 
 //actualizamos el LiveData
                         personajesLiveData.postValue(listaPersonajes)
+                        estadoServicioLiveData.postValue(EstadoServicio.PARADO)
                         //siguiente página para la siguiente lectura
                         pagina++
                     } else {
@@ -79,16 +87,24 @@ object NetworkService {
                             TAG,
                             "error en el acceso al servicio: $(respuesta.errorBody().toString())"
                         )
+                        estadoServicioLiveData.postValue(EstadoServicio.ERROR)
                     }
                 }
             } catch (e: IOException) {
                 Log.e(TAG, "error en el acceso al servicio: $(respuesta.errorBody().toString())")
+                estadoServicioLiveData.postValue(EstadoServicio.ERROR)
             }
         } else {
             Log.e(TAG, "error de acceso a Internet")
+            estadoServicioLiveData.postValue(EstadoServicio.ERROR)
         }
     }
     }
+
+    fun getEstadoServicioLiveData(): LiveData<EstadoServicio>{
+        return estadoServicioLiveData
+    }
+
     /**
      * Nos devuelve el LiveData con la lista
      */

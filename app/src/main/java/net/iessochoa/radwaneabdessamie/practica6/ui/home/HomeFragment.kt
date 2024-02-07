@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import net.iessochoa.radwaneabdessamie.practica6.adapters.PersonajesAdapter
 import net.iessochoa.radwaneabdessamie.practica6.databinding.FragmentHomeBinding
 import net.iessochoa.radwaneabdessamie.practica6.model.Personaje
+import net.iessochoa.radwaneabdessamie.practica6.network.NetworkService
 
 class HomeFragment : Fragment() {
 
@@ -77,8 +79,27 @@ class HomeFragment : Fragment() {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-       iniciaRecyclerView()
+       iniciaBarraProgreso()
+        iniciaRecyclerView()
     }
+
+    private fun iniciaBarraProgreso(){
+        homeViewModel.estadoServicioLiveData
+            .observe(viewLifecycleOwner){
+                binding.pbLeyendoPersonajes.visibility= when(it){
+                    NetworkService.EstadoServicio.LEYENDO ->View.VISIBLE
+                    NetworkService.EstadoServicio.PARADO ->View.INVISIBLE
+                    NetworkService.EstadoServicio.ERROR ->{
+                        Toast.makeText(requireContext(),"Problemas para acceder al servivio",Toast.LENGTH_SHORT).show()
+                                View.INVISIBLE
+                    }
+                }
+                if(it== NetworkService.EstadoServicio.LEYENDO){
+                    binding.pbLeyendoPersonajes.visibility=View.VISIBLE
+                }
+            }
+    }
+
 
     private fun iniciaRecyclerView() {
         //creamos el adaptador

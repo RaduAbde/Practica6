@@ -12,6 +12,8 @@ object Repository {
         this.application = context.applicationContext as Application
         NetworkService(application)
     }
+
+    fun getEstadoServicioLiveData()=NetworkService.getEstadoServicioLiveData()
     suspend fun getNextPersonajes()=NetworkService.getNextPersonajes()
     fun getLiveDataListaPersonajes ()=NetworkService.getLiveDataListaPersonajes()
 }

@@ -13,6 +13,7 @@ import net.iessochoa.radwaneabdessamie.practica6.repository.Repository
 
 class HomeViewModel (application: Application): AndroidViewModel(application) {
     val personajesLiveData:LiveData<MutableList<Personaje>>
+    val estadoServicioLiveData by lazy { Repository.getEstadoServicioLiveData() }
     init {
         //iniciamos el repositorio
         Repository(application)

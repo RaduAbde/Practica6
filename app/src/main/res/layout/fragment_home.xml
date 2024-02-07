@@ -15,4 +15,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_personaje" />
+
+    <ProgressBar
+        android:id="@+id/pbLeyendoPersonajes"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-230dp"
+        android:layout_marginTop="664dp"
+        app:layout_constraintStart_toEndOf="@+id/rvTareas"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

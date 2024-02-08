@@ -9,7 +9,12 @@
         android:id="@+id/navigation_home"
         android:name="net.iessochoa.radwaneabdessamie.practica6.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_personajeFragment"
+            app:destination="@id/personajeFragment"
+            app:launchSingleTop="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_favoritos"
@@ -22,4 +27,13 @@
         android:name="net.iessochoa.radwaneabdessamie.practica6.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/personajeFragment"
+        android:name="net.iessochoa.radwaneabdessamie.practica6.ui.PersonajeFragment"
+        android:label="Personaje"
+        tools:layout="@layout/fragment_personaje">
+        <argument
+            android:name="personaje"
+            app:argType="net.iessochoa.radwaneabdessamie.practica6.model.Personaje" />
+    </fragment>
 </navigation>

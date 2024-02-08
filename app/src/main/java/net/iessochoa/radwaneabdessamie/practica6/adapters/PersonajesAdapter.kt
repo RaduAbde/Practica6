@@ -11,13 +11,22 @@ import net.iessochoa.radwaneabdessamie.practica6.utils.cargaImagen
 class PersonajesAdapter :RecyclerView.Adapter<PersonajesAdapter.PersonajeViewHolder>(){
 
     var listaPersonajes: List<Personaje>?=null
+    var onPersonajeClickListener:OnPersonajeClickListener?=null
     fun setLista(lista:List<Personaje>){
         listaPersonajes=lista
         //notifica al adaptador que hay cambios y tiene que redibujar el ReciclerView
         notifyDataSetChanged()
     }
     inner class PersonajeViewHolder(val binding: ItemPersonajeBinding)
-        : RecyclerView.ViewHolder(binding.root)
+        : RecyclerView.ViewHolder(binding.root){
+            init {
+                //inicio del click sobre el Layout
+                binding.root.setOnClickListener(){
+                    val personaje = listaPersonajes?.get(this.adapterPosition)
+                    onPersonajeClickListener?.onPersonajeClik(personaje)
+                }
+            }
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
             PersonajeViewHolder {
@@ -41,17 +50,12 @@ class PersonajesAdapter :RecyclerView.Adapter<PersonajesAdapter.PersonajeViewHol
                 binding.tvGenero.text = gender
                 binding.tvNombre.text = name
                 cargaImagen(binding.ivFoto, image)
-                //mostramos el icono en función del estado
-                /*binding.ivEstado.setImageResource(
-                    when (estado) {
-                        0 -> R.drawable.ic_abierto
-                        1 -> R.drawable.ic_encurso
-                        else -> R.drawable.ic_cerrado
-                    }
-                )*/
-
             }
         }
+    }
+
+    interface OnPersonajeClickListener{
+        fun onPersonajeClik(personaje: Personaje?)
     }
 
 

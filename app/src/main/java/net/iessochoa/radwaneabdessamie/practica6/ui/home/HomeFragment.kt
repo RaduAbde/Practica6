@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import net.iessochoa.radwaneabdessamie.practica6.adapters.PersonajesAdapter
@@ -38,22 +39,11 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        //val textView: TextView = binding.textHome
-        /*homeViewModel.personajesLiveData
-            .observe(viewLifecycleOwner,Observer<List<Personaje>>) {
-                val text=StringBuilder()
-                actualizaLista()
-                //it es la lista de personajes actualizada
-                for(personaje in it)
-
-                    text.append(personaje.name).append("\n")
-                //textView.text = text
-            }*/
-
+/*
         homeViewModel.personajesLiveData
             .observe(viewLifecycleOwner,Observer<List<Personaje>> { lista ->
                 personajesAdapter.setLista(lista)
-            })
+            })*/
 
         return root
     }
@@ -79,9 +69,18 @@ class HomeFragment : Fragment() {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
        iniciaBarraProgreso()
         iniciaRecyclerView()
+        homeViewModel.personajesLiveData
+            .observe(viewLifecycleOwner,Observer<List<Personaje>> { lista ->
+                personajesAdapter.setLista(lista)
+            })
+        accionDetalle()
     }
+
+
 
     private fun iniciaBarraProgreso(){
         homeViewModel.estadoServicioLiveData
@@ -98,6 +97,16 @@ class HomeFragment : Fragment() {
                     binding.pbLeyendoPersonajes.visibility=View.VISIBLE
                 }
             }
+    }
+
+    private fun accionDetalle(){
+        personajesAdapter.onPersonajeClickListener = object :
+        PersonajesAdapter.OnPersonajeClickListener{
+            override fun onPersonajeClik(personaje: Personaje?) {
+                val action = HomeFragmentDirections.actionNavigationHomeToPersonajeFragment(personaje!!)
+                findNavController().navigate(action)
+            }
+        }
     }
 
 

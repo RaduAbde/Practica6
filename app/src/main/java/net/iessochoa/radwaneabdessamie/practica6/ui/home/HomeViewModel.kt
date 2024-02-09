@@ -26,4 +26,6 @@ class HomeViewModel (application: Application): AndroidViewModel(application) {
     fun getNextPersonajes()=viewModelScope.launch(Dispatchers.IO) {
         Repository.getNextPersonajes()
     }
+    fun addTarea(personaje: Personaje) = viewModelScope.launch(Dispatchers.IO){
+        Repository.addPersonaje(personaje)}
 }

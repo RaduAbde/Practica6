@@ -20,7 +20,11 @@
         android:id="@+id/navigation_favoritos"
         android:name="net.iessochoa.radwaneabdessamie.practica6.ui.favoritos.FavoritosFragment"
         android:label="@string/favoritos"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/action_navigation_favoritos_to_personajeFragment"
+            app:destination="@id/personajeFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"

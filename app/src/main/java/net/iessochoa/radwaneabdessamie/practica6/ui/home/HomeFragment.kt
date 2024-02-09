@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import net.iessochoa.radwaneabdessamie.practica6.adapters.PersonajesAdapter
@@ -109,6 +110,40 @@ class HomeFragment : Fragment() {
         }
     }
 
+    fun iniciaSwiped(){
+        //creamos el evento del Swiper para detectar cuando el usuario  desliza un item
+        val itemTouchHelperCallback =
+            object :
+                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or
+                        ItemTouchHelper.RIGHT) {
+                //si tenemos que actuar cuando se mueve un item
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder,
+                                      direction: Int) {
+
+                    val posicion = viewHolder.adapterPosition
+                    //obtenemos la posición de la tarea a partir del viewholder
+                    val personajeAdd=personajesAdapter.listaPersonajes?.get(posicion)
+                    //borramos la tarea. Falta preguntar al usuario si desea borrarla
+                            if (personajeAdd != null) {
+                              homeViewModel.addTarea(personajeAdd)
+                            }
+                    personajesAdapter.notifyItemChanged(posicion)
+                }
+            }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        //asignamos el evento al RecyclerView
+        itemTouchHelper.attachToRecyclerView(binding.rvTareas)
+    }
+
+
+
 
     private fun iniciaRecyclerView() {
         //creamos el adaptador
@@ -120,6 +155,7 @@ class HomeFragment : Fragment() {
             //le asignamos el adaptador
             adapter = personajesAdapter
         }
+        iniciaSwiped()
         defineDetectarFinRecycler()
     }
 
